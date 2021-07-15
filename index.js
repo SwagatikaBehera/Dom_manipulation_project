@@ -2,7 +2,7 @@
 const taskContainer = document.querySelector(".task_container");
 
 //Global Store
-const globalStore = [];
+let globalStore = [];
 
 const newCard = ({
   id,
@@ -15,8 +15,8 @@ const newCard = ({
               <div class="card-header d-flex justify-content-end gap-2">
                 <button type="button" class="btn btn-outline-success">
                   <i class="fas fa-pencil-alt"></i></button id=$
-                ><button type="button" class="btn btn-outline-danger">
-                  <i class="fas fa-trash-alt"></i>
+                ><button type="button" id=${id} class="btn btn-outline-danger" onclick="deleteCard.apply(this,arguments)">
+                  <i class="fas fa-trash-alt" id=${id} onclick="deleteCard.apply(this,arguments)"></i>
                 </button>
               </div>
               <img
@@ -55,6 +55,9 @@ const loadInitialTaskCards = () => {
   });
 };
 
+const updateLocalStorage = () =>
+  localStorage.setItem("taskY", JSON.stringify({ cards: globalStore }));
+
 const saveChanges = () => {
   const taskData = {
     id: `${Date.now()}`, //unique no. for card id
@@ -70,6 +73,31 @@ const saveChanges = () => {
   taskContainer.insertAdjacentHTML("beforeend", createNewCard);
   globalStore.push(taskData);
 
-  // aad to loacalstorage
-  localStorage.setItem("taskY", JSON.stringify({ cards: globalStore }));
+  // aad to localstorage
+  updateLocalStorage();
+};
+
+//deleting card
+const deleteCard = (event) => {
+  //id
+  event = window.event;
+  const targetID = event.target.id;
+  const tagname = event.target.tagName;
+
+  //search the globalStore, then remove the object ehich matches with the id
+  globalStore = globalStore.filter((cardObject) => cardObject.id !== targetID);
+
+  updateLocalStorage();
+
+  // access DOM toremove them
+  if (tagname === "BUTTON") {
+    // task_container
+    return taskContainer.removeChild(
+      event.target.parentNode.parentNode.parentNode // div col-lg-4
+    );
+  }
+  //icon
+  return taskContainer.removeChild(
+    event.target.parentNode.parentNode.parentNode.parentNode // div col-lg-4
+  );
 };
