@@ -22,7 +22,7 @@ const newCard = ({
               <img
                 src=${imageUrl}
                 class="card-img-top"
-                alt="..."
+                alt="photo"
               />
               <div class="card-body">
                 <h5 class="card-title">${taskTitle}</h5>
@@ -165,4 +165,9 @@ const saveEditChanges = (event) => {
     return task;
   });
   updateLocalStorage();
+  taskTitle.setAttribute("contenteditable", "false");
+  taskDescription.setAttribute("contenteditable", "false");
+  taskType.setAttribute("contenteditable", "false");
+  submitButton.removeAttribute("onclick");
+  submitButton.innerHTML = "Open Task";
 };
